@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGCIFY × ScaleUp</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster-wrapper {
+    width: min(100vw - 40px, 100vh - 40px);
+    aspect-ratio: 1 / 1;
+  }
+
+  .poster {
+    width: 1080px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+    transform-origin: top left;
+    background: linear-gradient(160deg,
+      #a8c8f8 0%,
+      #6aaaf5 15%,
+      #4a8fe8 30%,
+      #3a7de0 50%,
+      #2d6fd8 70%,
+      #2060cc 85%,
+      #1a52c0 100%
+    );
+  }
+
+  .clouds {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .cloud {
+    position: absolute;
+    background: rgba(255,255,255,0.92);
+    border-radius: 50%;
+  }
+
+  .c1 { width: 320px; height: 120px; top: -20px; right: -30px; border-radius: 60px; filter: blur(2px); opacity: 0.85; }
+  .c2 { width: 200px; height: 90px; top: 30px; right: 80px; border-radius: 50px; filter: blur(1px); opacity: 0.9; }
+  .c3 { width: 260px; height: 100px; top: -10px; right: 120px; border-radius: 55px; filter: blur(3px); opacity: 0.75; }
+  .c4 { width: 150px; height: 70px; top: 60px; right: 20px; border-radius: 40px; filter: blur(2px); opacity: 0.8; }
+  .c5 { width: 180px; height: 60px; top: 40px; left: -20px; border-radius: 40px; filter: blur(4px); opacity: 0.5; }
+  .c6 { width: 100px; height: 45px; top: 70px; left: 60px; border-radius: 30px; filter: blur(3px); opacity: 0.45; }
+  .c7 { width: 400px; height: 80px; top: 160px; left: -60px; border-radius: 50px; filter: blur(18px); opacity: 0.18; }
+
+  .poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 52px 60px;
+  }
+
+  /* ── Top bar ── */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-ugcify {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.15);
+  }
+
+  .sep-x {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ScaleUp logo block */
+  .scaleup-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .scaleup-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    /* invert to white since the bg is blue */
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+  }
+
+  .scaleup-wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .scaleup-wordmark .name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .scaleup-wordmark .sub {
+    font-family: 'Outfit', sans-serif;
+    font-size: 9px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.38);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .site-url {
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 1.5px;
+    background: rgba(255,255,255,0.12);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(6px);
+  }
+
+  .spacer { flex: 1; }
+
+  /* ── Hero ── */
+  .hero-block {
+    text-align: center;
+    padding: 0 40px;
+  }
+
+  .live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 100px;
+    padding: 7px 18px;
+    margin-bottom: 28px;
+    backdrop-filter: blur(8px);
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .live-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .headline {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 112px;
+    line-height: 0.9;
+    letter-spacing: -4px;
+    color: #fff;
+    text-shadow: 0 4px 40px rgba(0,50,160,0.25);
+    margin-bottom: 24px;
+  }
+
+  .headline .win {
+    position: relative;
+    display: inline-block;
+  }
+
+  .headline .win::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 3px;
+  }
+
+  .subtext {
+    font-size: 20px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.5;
+  }
+
+  .cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 36px;
+    margin-bottom: 10px;
+  }
+
+  .btn-primary {
+    background: #2563eb;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 32px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 24px rgba(37,99,235,0.5), 0 1px 0 rgba(255,255,255,0.15) inset;
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.92);
+    color: #1a3a8f;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 16px 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  .trial-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Bottom glass card ── */
+  .bottom-card {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    padding: 28px 32px;
+    display: flex;
+    align-items: stretch;
+    margin-top: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bottom-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  }
+
+  .card-cell {
+    flex: 1;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .card-cell:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 10%; right: 0;
+    height: 80%; width: 1px;
+    background: rgba(255,255,255,0.2);
+  }
+
+  .card-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .card-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 4px;
+  }
+
+  /* ── Steps ── */
+  .steps-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 22px;
+  }
+
+  .step-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 100px;
+    padding: 8px 16px;
+    backdrop-filter: blur(6px);
+  }
+
+  .step-n {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+  }
+
+  .step-l {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .step-arrow { font-size: 11px; color: rgba(255,255,255,0.25); }
+
+  /* ── Tags ── */
+  .tags-row {
+    display: flex;
+    gap: 7px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-size: 9px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 5px 12px;
+    background: rgba(255,255,255,0.06);
+  }
+</style>
+</head>
+<body>
+<div class="poster-wrapper" id="wrapper">
+<div class="poster" id="poster">
+
+  <div class="clouds">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="cloud c4"></div>
+    <div class="cloud c5"></div>
+    <div class="cloud c6"></div>
+    <div class="cloud c7"></div>
+  </div>
+
+  <div class="content">
+
+    <div class="top-bar">
+      <div class="brand-group">
+        <div class="logo-ugcify">UGCIFY</div>
+        <span class="sep-x">×</span>
+        <div class="scaleup-brand">
+          <img
+            class="scaleup-icon"
+            src="https://scaleupconclave.com/assets/images/icon.svg"
+            alt="ScaleUp"
+            onerror="this.style.display='none'"
+          />
+          <div class="scaleup-wordmark">
+            <span class="name">ScaleUp</span>
+            <span class="sub">Conclave</span>
+          </div>
+        </div>
+      </div>
+      <div class="site-url">scaleupconclave.com</div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="hero-block">
+      <div class="live-pill">
+        <div class="live-dot"></div>
+        <span class="live-text">Creator Campaign · Open to All</span>
+      </div>
+
+      <div class="headline">
+        Create.<br>Post.<br><span class="win">Win.</span>
+      </div>
+
+      <div class="subtext">
+        Shoot your best reel about ScaleUp Conclave.<br>
+        The most viewed creator takes home the prize.
+      </div>
+
+      <div class="cta-row">
+        <div class="btn-primary">🎬 &nbsp;Join the Campaign</div>
+        <div class="btn-secondary">View Details</div>
+      </div>
+      <div class="trial-note">25 – 30 Mar 2026 · No minimum followers required</div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="bottom-card">
+      <div class="card-cell" style="padding-left:0">
+        <div class="card-label">Prize Pool</div>
+        <div class="card-value">₹6,000</div>
+        <div class="card-sub">Total across winners</div>
+      </div>
+      <div class="card-cell">
+        <div class="card-label">1st Place</div>
+        <div class="card-value">₹4,000</div>
+        <div class="card-sub">Most viewed reel</div>
+      </div>
+      <div class="card-cell">
+        <div class="card-label">2nd Place</div>
+        <div class="card-value">₹2,000</div>
+        <div class="card-sub">Runner-up</div>
+      </div>
+      <div class="card-cell">
+        <div class="card-label">Campaign Start</div>
+        <div class="card-value" style="font-size:20px;padding-top:4px">25 Mar 2026</div>
+        <div class="card-sub">Doors open</div>
+      </div>
+      <div class="card-cell" style="padding-right:0">
+        <div class="card-label">Submission Deadline</div>
+        <div class="card-value" style="font-size:20px;padding-top:4px;color:#ffd97d;">30 Mar 2026</div>
+        <div class="card-sub" style="color:rgba(255,217,125,0.6);">Last day to submit</div>
+      </div>
+    </div>
+
+    <div class="steps-row">
+      <div class="step-chip"><span class="step-n">01</span><span class="step-l">Join</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-chip"><span class="step-n">02</span><span class="step-l">Shoot Reel</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-chip"><span class="step-n">03</span><span class="step-l">Post on IG</span></div>
+      <span class="step-arrow">→</span>
+      <div class="step-chip"><span class="step-n">04</span><span class="step-l">Win 🏆</span></div>
+    </div>
+
+    <div class="tags-row">
+      <span class="tag">Vlog</span>
+      <span class="tag">Experience</span>
+      <span class="tag">Storytelling</span>
+      <span class="tag">Creative Reel</span>
+      <span class="tag">No Min. Followers</span>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+  function scalePoster() {
+    const wrapper = document.getElementById('wrapper');
+    const poster = document.getElementById('poster');
+    const size = wrapper.offsetWidth;
+    poster.style.transform = `scale(${size / 1080})`;
+    wrapper.style.height = size + 'px';
+  }
+  scalePoster();
+  window.addEventListener('resize', scalePoster);
+</script>
+</body>
+</html>
